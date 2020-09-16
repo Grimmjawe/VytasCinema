@@ -4,12 +4,17 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using System.Net.Mail;
+using System.Net;
+using System.Linq;
+using System.Net.Mime;
+using System.Collections.Generic;
 
 namespace VytasCinema
 {
     public partial class Form2 : Form
     {
         string name;
+        List<string> arr_poilet;
         PictureBox[,] _arr = new PictureBox[4, 4];
         Image img_seat = Image.FromFile(AppContext.BaseDirectory + "seat.jpg"),
         img_seat_choose = Image.FromFile(AppContext.BaseDirectory + "seat_choose.jpg"),
@@ -84,20 +89,29 @@ namespace VytasCinema
 
         void Ask()
         {
-            var vastus = MessageBox.Show("Kas oled kindel?", "Appolo kusib", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             string text = "";
+            arr_poilet = new List<string>();
+            var vastus = MessageBox.Show("Kas oled kindel?", "Appolo kusib", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (vastus == DialogResult.Yes)
             {
+                int t = 0;
                 for (int i = 0; i < 4; i++)
                 {
                     for (int j = 0; j < 4; j++)
                     {
                         if (_arr[i, j].Image == img_seat_choose)
                         {
+                            t++;
                             _arr[i, j].Image = img_seat_bought;
+                            StreamWriter pilet = new StreamWriter(AppContext.BaseDirectory + "Pilet" + t.ToString() + "rida" + i.ToString() + "koht" + j.ToString() + ".txt");
+                            pilet.Write("Pilet: " + t.ToString() + " rida: " + i.ToString() + " koht: " + j.ToString());
+                            pilet.Close();
+                            arr_poilet.Add("Pilet" + t.ToString() + "rida" + i.ToString() + "koht" + j.ToString() + ".txt");
+                            MessageBox.Show(arr_poilet[0]);
                         }
                     }
                 }
+                SaadaBilet();
                 for (int i = 0; i < 4; i++)
                 {
                     for (int j = 0; j < 4; j++)
@@ -121,16 +135,38 @@ namespace VytasCinema
             }
         }
 
+        private void SaadaBilet()
+        {
+            try
+            {
+                string mailAd = Interaction.InputBox("Sisesta e-mail", "Kuhu saada", "vvytasik@gmail.com");
+                MailMessage mail = new MailMessage();
+                SmtpClient stmpClient = new SmtpClient("smtp.gmail.com")
+                {
+                    Port = 587,
+                    Credentials = new NetworkCredential("mvc.programmeerimine@gmail.com", "3.Kuursus"),
+                    EnableSsl = true
+                };
+                mail.To.Add(mailAd);
+                mail.From = new MailAddress("mvc.programmeerimine@gmail.com");
+                mail.Subject = "Pilet";
+                mail.Body = "";
+                foreach (var item in arr_poilet)
+                {
+                    Attachment data = new Attachment(item);
+                    mail.Attachments.Add(data);
+                }
+                stmpClient.Send(mail);
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
             Ask();
-            string mailAd = Interaction.InputBox("Sisesta e-mail","Kuhu saada","vvytasik@gmail.com");
-            MailMessage mail = new MailMessage();
-            mail.To.Add(mailAd);
-            mail.From = new MailAddress("vvytasik@gmail.com");
-            mail.Subject = "Pilet";
-            mail.Body = "Rida ... Koht ...";
-            //StmpServer.Port = 587;
         }
 
         private void button2_Click(object sender, EventArgs e)
