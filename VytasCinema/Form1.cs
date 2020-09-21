@@ -18,6 +18,9 @@ namespace VytasCinema
         {
             InitializeComponent();
             panel1.AutoScroll = true;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
 
             for (int i = 0; i < arr.Count; i++)
             {
@@ -28,11 +31,11 @@ namespace VytasCinema
                     SizeMode = PictureBoxSizeMode.Zoom,
                     Tag = arr[i]
                 };
-                Form2 form2;
+                Form3 form3;
                 pictureBox.Click += (e, s) => {
                     PictureBox pictureBox1 = (e as PictureBox);
-                    form2 = new Form2(pictureBox1.Tag.ToString() + "");
-                    form2.Show();
+                    form3 = new Form3(pictureBox1.Tag.ToString() + "");
+                    form3.Show();
                 };
                 panel1.Controls.Add(pictureBox);
             }
