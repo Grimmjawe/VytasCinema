@@ -5,8 +5,6 @@ using System.IO;
 using System.Windows.Forms;
 using System.Net.Mail;
 using System.Net;
-using System.Linq;
-using System.Net.Mime;
 using System.Collections.Generic;
 
 namespace VytasCinema
@@ -79,10 +77,24 @@ namespace VytasCinema
                 if (pic.Image == img_seat_choose)
                 {
                     pic.Image = img_seat;
+                    var breakk = true;
+                    for (int i = 0; i < 4; i++)
+                    {
+                        for (int j = 0; j < 4; j++)
+                        {
+                            if (_arr[i, j].Image == img_seat_choose)
+                            {
+                                breakk = false;
+                            }
+                        }
+                    }
+                    if (breakk)
+                        button1.Enabled = false;
                 }
                 else
                 {
                     pic.Image = img_seat_choose;
+                    button1.Enabled = true;
                 }
             }
         }
@@ -107,7 +119,6 @@ namespace VytasCinema
                             pilet.Write("Pilet: " + t.ToString() + " rida: " + i.ToString() + " koht: " + j.ToString());
                             pilet.Close();
                             arr_poilet.Add("Pilet" + t.ToString() + "rida" + i.ToString() + "koht" + j.ToString() + ".txt");
-                            MessageBox.Show(arr_poilet[0]);
                         }
                     }
                 }
@@ -157,10 +168,17 @@ namespace VytasCinema
                     mail.Attachments.Add(data);
                 }
                 stmpClient.Send(mail);
+                foreach (var item in arr_poilet)
+                {
+                    File.Delete(item);
+                }
             }
             catch (Exception)
             {
-
+                foreach (var item in arr_poilet)
+                {
+                    File.Delete(item);
+                }
             }
         }
 

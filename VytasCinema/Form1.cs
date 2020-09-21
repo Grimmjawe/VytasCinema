@@ -10,7 +10,9 @@ namespace VytasCinema
         List<string> arr = new List<string>()
         {
             "DOVOD",
-            "TheNewMutants"
+            "TheNewMutants",
+            "SpongBobMovie",
+            "Glava2"
         };
         public Form1()
         {
@@ -21,15 +23,15 @@ namespace VytasCinema
             {
                 PictureBox pictureBox = new PictureBox() {
                     Size = new Size(215, 310),
-                    Location = new Point(11, i * 318),
+                    Location = new Point(11, i * 310),
                     Image = Image.FromFile(AppContext.BaseDirectory + arr[i] + ".jpg"),
                     SizeMode = PictureBoxSizeMode.Zoom,
-                    Tag = new int[] { i }
+                    Tag = arr[i]
                 };
                 Form2 form2;
                 pictureBox.Click += (e, s) => {
-                    PictureBox pictureBox = (s as PictureBox);
-                    form2 = new Form2(arr[i] + "");
+                    PictureBox pictureBox1 = (e as PictureBox);
+                    form2 = new Form2(pictureBox1.Tag.ToString() + "");
                     form2.Show();
                 };
                 panel1.Controls.Add(pictureBox);
