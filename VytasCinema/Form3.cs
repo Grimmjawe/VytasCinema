@@ -13,7 +13,7 @@ namespace VytasCinema
         List<string> arr = new List<string>();
         public Form3(string nAme)
         {
-            InToBD(1, 1, 1);
+            //InToBD(1, 1, 1);
             name = nAme;
             InitializeComponent();
             this.Text = name + " - Сеансы";
@@ -90,11 +90,9 @@ namespace VytasCinema
         }
 
         void InToBD(int t, int i, int j) {
-            string connString = @"Data Source=(LocalDb)\MSSQLLocalDB;Initial Catalog=aspnet-MvcMovie;Integrated Security=SSPI;AttachDbFilename=|DataDirectory|\AppData\Database1.mdf",
-            sql = "INSERT INTO Piletid(Id,Rida,Koht) VALUES (" + t + "," + i + "," + j + ")";
-            SqlConnection conn = new SqlConnection(connString);
+            SqlConnection conn = new SqlConnection(@"Data Source=(LocalDb)\MSSQLLocalDB;Initial Catalog=aspnet-MvcMovie;Integrated Security=SSPI;AttachDbFilename=|DataDirectory|\AppData\Database1.mdf");
             conn.Open();
-            SqlCommand sqlCommand = new SqlCommand(sql, conn);
+            SqlCommand sqlCommand = new SqlCommand("INSERT INTO Piletid(Id,Rida,Koht) VALUES (" + t + "," + i + "," + j + ")", conn);
             sqlCommand.ExecuteNonQuery();
             sqlCommand.Dispose();
             conn.Close();
